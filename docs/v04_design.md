@@ -52,3 +52,39 @@ Include a list of omitted environmental factors in each generated report.
 ## Next decision
 
 Prioritize a **dimensionally coherent mathematical state specification** and independent validation of its assumptions. Do not treat a numeric count or molar input as calibrated simply because it carries a physical unit.
+
+
+## Approved six-state intersection specification (design, not implemented)
+
+Antibiotic response is partitioned into three **mutually exclusive operational states** for a given drug, exposure and measurement context: susceptible (S), intermediate/transition (I), resistant (R). The proposed small overlap of susceptible and resistant sets is represented by **I**, not by counting the same cell twice. The transition state is a modeling abstraction; its interpretation (intermediate susceptibility, heterogeneous response, or an uncertain phenotype) must be documented and not conflated with a particular clinical breakpoint.
+
+For a **specified phage–host pairing**, define F+ (susceptible to productive phage infection under model assumptions) and F− (not productively infected). The six bacterial compartments are:
+`B_S,F+`, `B_S,F−`, `B_I,F+`, `B_I,F−`, `B_R,F+`, `B_R,F−`.
+These six categories are disjoint and their populations sum to the total bacterial population. F+ / F− is **pair-specific**, not an intrinsic global property of a phage or bacterium. Binding, productive infection and phage replication must remain conceptually distinct.
+
+**Reference initial condition:** bacteria numerically predominate over phages; antibiotic-resistant bacterial variants are already present; the mutation process is not presumed negligible. Initial abundance, resistance distribution, mutation assumptions and uncertainty ranges remain researcher-configurable. Pre-existing resistance **does not imply** a high mutation rate. Phage abundance can be uncertain; rapid increase is possible only conditional on compatible hosts and productive replication.
+
+## Transition catalog and interpretation
+
+| User case | Conceptual model transition | Interpretation and qualification |
+|---|---|---|
+| 1.1 | R ↔ I ↔ S without antibiotic | Resistance loss or selection of susceptible variants; not guaranteed |
+| 1.2 | S ↔ I ↔ R with antibiotic | Genetic change, transfer, or differential selection; do not equate selection with individual transformation |
+| 2.1, 2.2 | Productively infecting phage variants ↔ nonproductive variants | May arise under either antibiotic condition; distinguish particle defect from host mismatch |
+| 3.1, 3.2 | R ↔ I ↔ S with antibiotic and phage | Both directions permitted as hypotheses; no predetermined favorable outcome |
+| 4.1, 4.2 | Phage infectivity phenotype may change in either direction | Requires an explicit mechanism; genes do not spontaneously become phage particles |
+| 5.1 | Phage-associated horizontal gene transfer may change bacterial traits | Optional and separately gated; not presumed to occur in every system |
+| 5.2 | Phage → bacterium | **Excluded**: viruses do not transform into bacteria. If intended as phage-mediated trait transfer, it belongs under 5.1 |
+| 6.1, 6.3 | Emergence of bacterial/phage variants with uncharacterized effects | Mark **uncertain**, not neutral; do not assume zero effect |
+
+The six bacterial compartments are **phenotypic states**; new genetic variants may exist within each compartment and need not be a new species. Antibiotic-resistant bacteria need not be completely unaffected by antibiotic exposure.
+
+## Uncertain outcomes: explicit treatment
+
+Use the status **uncertain** (`belirsiz`) for uncharacterized effects. Do **not** automatically assign zero selection effect, a beneficial effect, or a harmful effect. Keep an explicit `unknown` marker, document the reason, and distinguish missing knowledge from a genuinely measured neutral effect. An exploratory model may use labeled hypothetical sensitivity cases, but cannot claim that a selected value is experimentally established. No probability distribution is implied without a stated assumption and evidence.
+
+## Conceptual state accounting and quality gates
+
+For six nonnegative bacterial state populations `B_k(t)`, total bacteria is `N_B(t)=sum_k B_k(t)`. If `N_B>0`, frequencies are `x_k=B_k/N_B` and sum to one; when `N_B=0`, frequencies are **undefined**, not zero by fiat. Conceptually separate (a) growth/loss, (b) mutation and trait transitions, (c) antibiotic/phage selection, (d) optional transfer and environmental mechanisms. Any transition-only operator must conserve bacterial counts across the six compartments; birth/death and infection loss are accounted for separately. The phage population has its own state and is never a bacterial state.
+
+Quality gates before a code release: nonnegative states, conservation under transition-only dynamics, no double counting in overlap, explicit handling of extinction, independent mechanism toggles, reproducibility, numerical convergence and uncertainty reporting. No mechanistic rates are asserted in this design.
