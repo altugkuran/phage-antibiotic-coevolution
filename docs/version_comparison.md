@@ -38,3 +38,25 @@ python run_v03.py --bacteria-count 100 --phage-count 50 --antibiotic-mol-per-lit
 ```
 
 The numbers in this command are **software test placeholders**, not laboratory settings or biological recommendations.
+
+
+## v0.4 proposed architecture — differences from earlier versions
+
+**v0.4 is a documented design, not a released or validated computational engine.** Existing code remains v0.1–v0.3.
+
+| Feature | v0.1 | v0.2 | v0.3 | v0.4 design |
+|---|---|---|---|---|
+| Bacterial representation | 2 strategy frequencies | 3 strategy frequencies | Same as v0.2 | Six disjoint phenotype compartments: S/I/R × F+/F− |
+| Susceptible/resistant overlap | Not explicit | Not explicit | Not explicit | Intermediate transition region I; no double counting |
+| Phage susceptibility | Abstract compatibility | 3×3 compatibility matrix | Same | Pair-specific productive infection state, not a global label |
+| Initial state | Abstract | Low/medium/high diversity | Same | Bacteria initially predominate; prior antibiotic resistance; adjustable |
+| Physical counts | Not modeled | Not modeled | Metadata only | Conceptually distinguished from density/frequency; implementation pending |
+| Mutational effects | Simplified | Simplified | Same | Unknown outcomes explicitly **uncertain**, not assumed neutral |
+| Direction of change | Simplified strategy changes | Simplified strategy changes | Same | Bidirectional transitions as hypotheses; selection distinguished from mutation |
+| Horizontal gene transfer | Not represented | Not represented | Not represented | Optional conceptual mechanism, not assumed |
+| External mutagens | Not characterized | Not characterized | Not characterized | Added mutagenic chemicals and ionizing radiation excluded from baseline |
+| Clinical validation | None | None | None | None; independent review required |
+
+**Why this matters:** A six-state phenotype model distinguishes antibiotic response from phage susceptibility, represents an intermediate antibiotic-response region without logically overlapping disjoint categories, and separates uncertain evolutionary outcomes from truly neutral measured effects. It does **not** establish the transition rates or predict outcomes for any specific organism, drug or phage.
+
+See [v0.4 design](v04_design.md) for the transition catalog, limitations, and validation gates.
